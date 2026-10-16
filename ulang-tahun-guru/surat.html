@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Semua Surat | Selamat Ulang Tahun Bu Maya</title>
+  <meta name="description" content="Kumpulan lengkap surat dari murid-murid untuk guru tercinta.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="surat.css">
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav" aria-label="Navigasi">
+      <a href="index.html#surat">← Kembali ke halaman utama</a>
+      <a href="kirim-ucapan.html">Kirim Ucapan</a>
+    </nav>
+
+    <header class="surat-header">
+      <p class="eyebrow" id="surat-count">Surat dari anak-anak Bu May</p>
+      <h1>Semua <span class="nama">Surat</span></h1>
+      <p class="lead">Semua surat dari temen-temen ada di sini. Klik salah satu surat untuk membaca isi lengkapnya.</p>
+    </header>
+
+    <main>
+      <div class="surat-list" id="suratList" aria-live="polite"></div>
+      <nav class="pager" id="pager" aria-label="Halaman surat" hidden>
+        <button class="btn" id="prev" type="button">← Sebelumnya</button>
+        <span class="pager-info" id="pagerInfo"></span>
+        <button class="btn" id="next" type="button">Berikutnya →</button>
+      </nav>
+    </main>
+
+    <div class="contribute"><p>Ingin ikut menulis surat untuk guru?</p><a class="btn primary" href="kirim-ucapan.html">Kirim ucapan dan foto</a></div>
+    <footer>Dari murid-muridmu, dengan sayang.</footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="surat.js"></script>
+</body>
+</html>

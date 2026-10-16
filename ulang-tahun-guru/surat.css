@@ -1,0 +1,25 @@
+/* Khusus halaman surat.html (tidak mengubah style.css) */
+.surat-header{padding:48px 0 12px}
+.surat-header h1{margin:0}
+.surat-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,340px);
+  justify-content:center;
+  gap:44px 28px;padding-block:36px 24px;
+}
+/* ukuran kartu fiks */
+.surat-list .card{
+  flex:none;width:340px;height:300px;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.surat-list .card .to,.surat-list .card .message-preview,.surat-list .card .message-read-more{flex:none}
+.surat-list .card .message-preview{-webkit-line-clamp:4;line-clamp:4;white-space:normal}
+.surat-list .card .from{margin-top:auto!important;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pager{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:8px 0 56px}
+.pager-info{font-weight:800;color:var(--chalk-dim);font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+.pager .btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+@media(max-width:420px){
+  .surat-list{grid-template-columns:minmax(0,1fr)}
+  .surat-list .card{width:100%}
+}
+@media(max-width:600px){.surat-header{padding-top:36px}}
