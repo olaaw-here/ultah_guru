@@ -1,1 +1,9 @@
-supabase.js
+# Local environment secrets
+.env
+.env.*
+
+# Supabase local artifacts
+supabase/.branches
+supabase/.temp
+supabase/*.log
+supabase/.env
