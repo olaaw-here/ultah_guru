@@ -33,9 +33,38 @@
 const SUPABASE_URL = "https://ushynmskydguubgqwoxc.supabase.co";   // <- ganti ini
 const SUPABASE_KEY = "sb_publishable_Sh-3UlZ2qVTD9LBaPFfakw_-TUTAuV_";      // <- ganti ini
 
+const supabaseClient = (typeof window !== "undefined" && window.supabase && typeof window.supabase.createClient === "function")
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: false }
+    })
+  : null;
+
 /* ============================================================
    Jangan ubah kode di bawah ini
    ============================================================ */
+
+function isSupabaseConfigured() {
+  return Boolean(
+    SUPABASE_URL &&
+    SUPABASE_KEY &&
+    !SUPABASE_URL.startsWith("GANTI") &&
+    !SUPABASE_KEY.startsWith("GANTI")
+  );
+}
+
+function normalizeSupabaseRow(row) {
+  if (!row) return null;
+
+  return {
+    id: row.id,
+    name: row.name,
+    generation: row.generation,
+    message: row.message,
+    photoTitle: row.photo_title || row.photoTitle || "",
+    photoData: row.photo_data || row.photoData || "",
+    submittedAt: row.submitted_at || row.submittedAt
+  };
+}
 
 /**
  * Kirim satu ucapan ke Supabase.
@@ -43,7 +72,7 @@ const SUPABASE_KEY = "sb_publishable_Sh-3UlZ2qVTD9LBaPFfakw_-TUTAuV_";      // <
  * @returns {Promise<{ok: boolean, error: string|null}>}
  */
 async function supabaseInsert(entry) {
-  if (SUPABASE_URL.startsWith("GANTI") || SUPABASE_KEY.startsWith("GANTI")) {
+  if (!isSupabaseConfigured()) {
     console.warn("[Supabase] URL/Key belum diisi. Lewati penyimpanan ke server.");
     return { ok: false, error: "config" };
   }
@@ -88,9 +117,31 @@ async function supabaseInsert(entry) {
  * @returns {Promise<{data: Array|null, error: string|null}>}
  */
 async function supabaseFetchAll() {
-  if (SUPABASE_URL.startsWith("GANTI") || SUPABASE_KEY.startsWith("GANTI")) {
+  if (!isSupabaseConfigured()) {
     console.warn("[Supabase] URL/Key belum diisi. Baca data dari localStorage saja.");
     return { data: null, error: "config" };
+  }
+
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient
+        .from("messages")
+        .select("*")
+        .order("submitted_at", { ascending: true });
+
+      if (error) {
+        console.error("[Supabase] Fetch gagal:", error);
+        return { data: null, error: error.message || "fetch_error" };
+      }
+
+      return {
+        data: (data || []).map(normalizeSupabaseRow),
+        error: null
+      };
+    } catch (err) {
+      console.error("[Supabase] Network error:", err);
+      return { data: null, error: err.message };
+    }
   }
 
   try {
@@ -111,21 +162,44 @@ async function supabaseFetchAll() {
     }
 
     const rows = await res.json();
-
-    /* Normalisasi nama kolom snake_case ke camelCase */
-    const data = rows.map(r => ({
-      id:          r.id,
-      name:        r.name,
-      generation:  r.generation,
-      message:     r.message,
-      photoTitle:  r.photo_title || "",
-      photoData:   r.photo_data  || "",
-      submittedAt: r.submitted_at
-    }));
-
-    return { data, error: null };
+    return {
+      data: rows.map(normalizeSupabaseRow).filter(Boolean),
+      error: null
+    };
   } catch (err) {
     console.error("[Supabase] Network error:", err);
     return { data: null, error: err.message };
   }
+}
+
+/**
+ * Subscribe ke event insert baru dan panggil callback untuk setiap ucapan baru.
+ * @param {Function} onInsert
+ * @returns {Function} cleanup function
+ */
+function subscribeToMessages(onInsert) {
+  if (!isSupabaseConfigured() || !supabaseClient || typeof onInsert !== "function") {
+    return function cleanup() {};
+  }
+
+  const channel = supabaseClient.channel("messages-realtime");
+
+  channel.on(
+    "postgres_changes",
+    { event: "INSERT", schema: "public", table: "messages" },
+    (payload) => {
+      const row = normalizeSupabaseRow(payload.new);
+      if (row) onInsert(row);
+    }
+  );
+
+  channel.subscribe((status) => {
+    if (status === "CHANNEL_ERROR") {
+      console.error("[Supabase] Realtime channel error");
+    }
+  });
+
+  return function cleanup() {
+    supabaseClient.removeChannel(channel);
+  };
 }

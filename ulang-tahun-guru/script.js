@@ -33,6 +33,88 @@ function clamp(value, min, max) {
       .map(function(item){ return { src: item.photoData, ket: item.photoTitle || "Kenangan bersama" }; })
   };
 
+  function updateCountLabel() {
+    var countEl = document.getElementById("surat-count");
+    if (countEl) countEl.textContent = DATA.surat.length + " ucapan dari murid-muridmu";
+  }
+
+  function appendLiveMessage(item) {
+    if (!item || !item.name || !item.message) return;
+
+    const alreadyExists = DATA.surat.some(function(m){
+      return m.dari === item.name && m.kelas === item.generation && m.isi === item.message;
+    });
+    if (alreadyExists) return;
+
+    DATA.surat.push({ dari: item.name, kelas: item.generation, isi: item.message });
+    updateCountLabel();
+
+    var track = document.getElementById("track");
+    if (track) {
+      var emptyMessage = track.querySelector(".empty-message");
+      if (emptyMessage) emptyMessage.remove();
+
+      for (var copy = 0; copy < 3; copy++) {
+        var c = h("article", "card");
+        c.style.setProperty("--tilt", ((DATA.surat.length + copy) % 2 ? 1.1 : -1.1) + "deg");
+        c.appendChild(h("p", "to", "Untuk " + DATA.nama + ","));
+        var preview = sap(String(item.message || ""));
+        c.appendChild(h("p", "message-preview", preview));
+        c.appendChild(h("p", "message-read-more"));
+        c.appendChild(h("p", "from", "— " + (item.name || "Murid") + (item.generation ? ", " + item.generation : "")));
+        c.tabIndex = 0;
+        c.setAttribute("role", "button");
+        c.setAttribute("aria-label", "Baca ucapan lengkap dari " + (item.name || "Murid"));
+        c.addEventListener("click", function(){
+          openDetail({ dari: item.name, kelas: item.generation, isi: item.message });
+        });
+        c.addEventListener("keydown", function(e){
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openDetail({ dari: item.name, kelas: item.generation, isi: item.message });
+          }
+        });
+        track.appendChild(c);
+        cards.push(c);
+      }
+
+      var dots = document.getElementById("dots");
+      var pause = document.getElementById("pause");
+      if (dots) dots.hidden = false;
+      if (pause) pause.hidden = false;
+      if (vp) vp.style.maskImage = "";
+      if (vp) vp.style.webkitMaskImage = "";
+      metrics();
+      offset = loopLen;
+      applyTransform(offset);
+    }
+
+    if (item.photoData) {
+      DATA.foto.push({ src: item.photoData, ket: item.photoTitle || "Kenangan bersama" });
+      var grid = document.getElementById("grid");
+      if (grid) {
+        var has = true;
+        var p = h(has ? "button" : "div", "pol");
+        if (has) p.type = "button";
+        p.style.setProperty("--r", ((DATA.foto.length % 6) ? ([-2.2, 1.6, -0.8, 2.1, -1.5, 0.9][DATA.foto.length % 6]) : -2.2) + "deg");
+        var ph = h("span", "ph");
+        var im = document.createElement("img");
+        im.src = item.photoData; im.alt = item.photoTitle || "Foto kenangan"; im.loading = "lazy";
+        ph.appendChild(im);
+        p.appendChild(ph);
+        p.appendChild(h("span", "cap", item.photoTitle || "Kenangan bersama"));
+        p.addEventListener("click", function(){
+          lastFocus = p;
+          lbimg.src = item.photoData; lbimg.alt = item.photoTitle || "";
+          lbcap.textContent = item.photoTitle || "Kenangan bersama";
+          lb.hidden = false;
+          document.getElementById("lbx").focus();
+        });
+        grid.appendChild(p);
+      }
+    }
+  }
+
   function sap(t){ return t.split("{s}").join(DATA.sapaan); }
 
   $("#nama").textContent = DATA.nama;
@@ -44,6 +126,12 @@ function clamp(value, min, max) {
     $("#pause").hidden = true;
     $("#vp").style.maskImage = "none";
     $("#vp").style.webkitMaskImage = "none";
+  }
+
+  if (typeof subscribeToMessages === "function") {
+    subscribeToMessages(function(item){
+      appendLiveMessage(item);
+    });
   }
 
   /* ---------- confetti ---------- */
