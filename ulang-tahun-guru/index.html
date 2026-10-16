@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Selamat Ulang Tahun Bu Maya</title>
+  <meta name="description" content="Halaman ucapan selamat ulang tahun dari murid-murid untuk guruku tercinta.">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <nav class="nav" aria-label="Bagian halaman">
+      <a href="#ucapan">Ucapan</a>
+      <a href="#surat">Surat</a>
+      <a href="#foto">Foto</a>
+      <a href="kirim-ucapan.html">Kirim Ucapan</a>
+    </nav>
+
+    <header class="hero" id="ucapan">
+      <div>
+        <p class="eyebrow">Hari istimewa untuk</p>
+        <h1>Selamat Ulang Tahun, <span class="nama" id="nama">Bu Maya</span>!</h1>
+        <p class="lead">Kumpulan doa, cerita, dan kenangan dari murid-murid yang pernah belajar bersama. Kamu juga bisa ikut mengisi halaman ini.</p>
+        <div class="actions">
+          <button class="btn" id="tune" type="button">Putar nada</button>
+          <a class="btn" href="#surat">Baca surat dari kami</a>
+        </div>
+      </div>
+      <div class="cake-wrap">
+        <svg id="cake" viewBox="0 0 320 340" role="button" tabindex="0" aria-label="Ketuk kue untuk meniup atau menyalakan lilin"
+          aria-label="Kue ulang tahun dengan tiga lilin, digambar dengan kapur">
+          <defs>
+            <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4" result="n" />
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" />
+            </filter>
+          </defs>
+          <g filter="url(#rough)">
+            <path class="ch" d="M24 304 H296" />
+            <path class="ch" d="M60 304 V222 H260 V304" />
+            <path class="ch pk" d="M60 222 q12.5 16 25 0 t25 0 t25 0 t25 0 t25 0 t25 0 t25 0 t25 0" />
+            <path class="ch bl" d="M60 266 H260" />
+            <path class="ch" d="M95 222 V162 H225 V222" />
+            <path class="ch pk" d="M95 162 q13 18 26 0 t26 0 t26 0 t26 0 t27 0" />
+            <path class="ch" d="M130 162 V122 M160 162 V122 M190 162 V122" />
+            <path class="ch yl" d="M110 192 h8 M138 196 h8 M170 192 h8 M200 196 h8" />
+            <circle class="dot-bl" cx="84" cy="286" r="4" />
+            <circle class="dot-pk" cx="116" cy="286" r="4" />
+            <circle class="dot-bl" cx="148" cy="286" r="4" />
+            <circle class="dot-pk" cx="180" cy="286" r="4" />
+            <circle class="dot-bl" cx="212" cy="286" r="4" />
+            <circle class="dot-pk" cx="240" cy="286" r="4" />
+            <path class="ch yl" d="M36 120 v18 M27 129 h18 M290 80 v14 M283 87 h14 M270 150 v12 M264 156 h12" />
+            <path class="flame" d="M130 98 c8 10 8 18 0 20 c-8 -2 -8 -10 0 -20 z" />
+            <path class="flame" d="M160 98 c8 10 8 18 0 20 c-8 -2 -8 -10 0 -20 z" />
+            <path class="flame" d="M190 98 c8 10 8 18 0 20 c-8 -2 -8 -10 0 -20 z" />
+            <path class="ch smoke" d="M130 112 q-8 -14 2 -26 M160 112 q-8 -14 2 -26 M190 112 q-8 -14 2 -26"
+              stroke-width="2.5" />
+          </g>
+        </svg>
+      </div>
+    </header>
+
+    <section class="sec" id="surat" aria-labelledby="h-surat">
+      <p class="eyebrow" id="surat-count">Surat dari murid-muridmu</p>
+      <h2 id="h-surat">Surat untuk Guruku</h2>
+      <p class="sub">Ucapan dari teman-teman akan muncul di sini setelah dikirim. Jadilah yang pertama berbagi cerita.</p>
+      <svg class="rule" viewBox="0 0 120 8" aria-hidden="true">
+        <path d="M2 5 Q20 0 40 4 T80 4 T118 3" fill="none" stroke="#f29bb4" stroke-width="3" stroke-linecap="round" />
+      </svg>
+
+      <div class="carousel" id="carousel">
+        <div class="vp" id="vp" tabindex="0" role="region" aria-roledescription="carousel"
+          aria-label="Surat dari murid-murid">
+          <div class="track" id="track"></div>
+        </div>
+        <div class="controls">
+          <div class="dots" id="dots"></div>
+          <button class="pause" id="pause" type="button">Jeda</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="foto" aria-labelledby="h-foto">
+      <p class="eyebrow">Album Foto</p>
+      <h2 id="h-foto">Kenangan Bersama</h2>
+      <p class="sub">Foto kebersamaan yang dibagikan oleh murid-murid.</p>
+      <svg class="rule" viewBox="0 0 120 8" aria-hidden="true">
+        <path d="M2 5 Q20 0 40 4 T80 4 T118 3" fill="none" stroke="#8fd0ea" stroke-width="3" stroke-linecap="round" />
+      </svg>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <div class="contribute"><p>Ingin menambahkan ucapan atau foto kenangan?</p><a class="btn primary" href="kirim-ucapan.html">Kirim ucapan dan foto</a></div>
+    <footer>Dari murid-muridmu, dengan sayang.</footer>
+  </div>
+
+  <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto diperbesar">
+    <button class="round x" id="lbx" type="button" aria-label="Tutup foto"><svg viewBox="0 0 20 20" fill="none"
+        stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+        <path d="m5 5 10 10M15 5 5 15" />
+      </svg></button>
+    <figure><img id="lbimg" alt="">
+      <figcaption id="lbcap"></figcaption>
+    </figure>
+  </div>
+
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+
+</body>
+
+</html>

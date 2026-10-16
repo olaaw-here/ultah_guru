@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Kirim Ucapan | Selamat Ulang Tahun Bu Maya</title>
+  <meta name="description" content="Kirim ucapan dan foto kenangan bersama guru.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap submit-wrap">
+    <nav class="nav" aria-label="Navigasi">
+      <a href="index.html">← Kembali ke halaman utama</a>
+    </nav>
+    <header class="submit-header">
+      <p class="eyebrow">Bagian dari kenangan kita</p>
+      <h1>Kirim <span class="nama">Ucapan</span></h1>
+      <p class="lead">Tulis pesan untuk guru dan bagikan foto kebersamaan yang ingin dikenang.</p>
+    </header>
+
+    <main class="submit-card">
+      <form id="messageForm">
+        <label for="studentName">Nama atau inisial</label>
+        <input id="studentName" name="studentName" maxlength="60" placeholder="Contoh: A.N. / Raka" required>
+
+        <label for="generation">Angkatan</label>
+        <input id="generation" name="generation" maxlength="40" placeholder="Contoh: Angkatan 2024 / XII IPA 2" required>
+
+        <label for="message">Ucapan</label>
+        <textarea id="message" name="message" rows="5" maxlength="1200" placeholder="Tuliskan doa, ucapan, atau kenangan bersama..." required></textarea>
+        <p class="field-note"><span id="charCount">0</span>/1200 karakter</p>
+
+        <div class="form-divider"></div>
+        <p class="eyebrow">Opsional</p>
+        <label for="photoTitle">Judul foto</label>
+        <input id="photoTitle" name="photoTitle" maxlength="100" placeholder="Contoh: Kenangan class meeting">
+
+        <label for="photo">Upload foto kebersamaan dengan guru</label>
+        <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp">
+        <p class="field-note">Format JPG, PNG, atau WEBP. Maksimal 3 MB. Kamu bisa mengganti atau menghapus foto sebelum mengirim.</p>
+
+        <div id="previewWrap" class="preview-wrap" hidden>
+          <img id="previewImage" alt="Pratinjau foto yang dipilih">
+          <div class="preview-actions">
+            <button type="button" class="btn" id="changePhoto">Ganti foto</button>
+            <button type="button" class="btn" id="removePhoto">Hapus foto</button>
+          </div>
+        </div>
+
+        <div class="notice" role="note">
+          <strong>Harap periksa sebelum mengirim.</strong>
+          Setelah ucapan dikirim, kamu tidak dapat mengubah atau menghapusnya melalui halaman ini. Pastikan nama/inisial, angkatan, ucapan, dan foto sudah benar serta kamu memiliki izin untuk membagikan foto tersebut.
+        </div>
+
+        <label class="confirm-row">
+          <input type="checkbox" id="confirm" required>
+          <span>Saya sudah memeriksa isi kiriman dan memahami bahwa kiriman tidak dapat dihapus setelah dikirim.</span>
+        </label>
+
+        <button class="btn primary submit-btn" id="submitBtn" type="submit">Kirim ucapan</button>
+        <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+    <footer>Terima kasih sudah ikut menyimpan kenangan. ♡</footer>
+  </div>
+  <script src="supabase.js"></script>
+  <script src="submit.js"></script>
+</body>
+</html>
